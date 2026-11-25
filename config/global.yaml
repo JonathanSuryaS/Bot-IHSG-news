@@ -1,0 +1,18 @@
+# Global markets shown in the 07:30 brief ("Global semalam").
+# Values are the latest *completed* daily close on Yahoo at fetch time:
+# at 07:30 WIB that's last night's US close and yesterday's Asia close.
+# decimals = how many decimals the brief shows.
+# Coal (Newcastle/Rotterdam) isn't available on Yahoo; add it later if a
+# source is found.
+
+markets:
+  - {symbol: "^DJI",  name: "Dow Jones",  group: us,        decimals: 2}
+  - {symbol: "^GSPC", name: "S&P 500",    group: us,        decimals: 2}
+  - {symbol: "^IXIC", name: "Nasdaq",     group: us,        decimals: 2}
+  - {symbol: "^N225", name: "Nikkei 225", group: asia,      decimals: 2}
+  - {symbol: "^HSI",  name: "Hang Seng",  group: asia,      decimals: 2}
+  - {symbol: "^STI",  name: "STI",        group: asia,      decimals: 2}
+  - {symbol: "IDR=X", name: "USD/IDR",    group: fx,        decimals: 0}
+  - {symbol: "BZ=F",  name: "Brent",      group: commodity, decimals: 2}
+  - {symbol: "GC=F",  name: "Emas",       group: commodity, decimals: 2}
+  - {symbol: "CPO=F", name: "CPO",        group: commodity, decimals: 2}

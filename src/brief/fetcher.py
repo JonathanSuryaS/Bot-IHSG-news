@@ -17,6 +17,10 @@ Output schema (keep stable; the skill and verify.py depend on it):
                 "trend_5d": ["7.050,10", ...], "volume_vs_20d": null}
   },
   "watchlist": [ { same shape as index, plus "name" } ],
+  "global": [
+    {"symbol": "^DJI", "name": "Dow Jones", "group": "us", "market_date": "2026-11-24",
+     "close": 50018.7, "change_pct": 0.3, "display": {"close": "50.018,70", "change_pct": "+0,30%"}}
+  ],
   "dividends": [
     {"symbol": "BBRI.JK", "name": "...", "ex_date": "2026-12-03",
      "amount": null, "display": {"ex_date": "03 Des 2026", "amount": null},
@@ -266,6 +270,30 @@ def fetch_news(feeds_cfg: dict, patterns: dict[str, re.Pattern], now: datetime) 
     return items, errors
 
 
+# ---------- global markets ----------
+
+def fetch_global(now: datetime) -> tuple[list[dict], list[str]]:
+    """Latest completed close for each market in config/global.yaml."""
+    import yaml
+
+    path = CONFIG_DIR / "global.yaml"
+    if not path.exists():
+        return [], []
+    out, errors = [], []
+    for m in (yaml.safe_load(path.read_text()) or {}).get("markets", []):
+        try:
+            q = fetch_quote(m["symbol"], now, price_decimals=m.get("decimals", 2))
+            out.append({
+                "symbol": m["symbol"], "name": m["name"], "group": m.get("group"),
+                "market_date": q["market_date"], "close": q["close"],
+                "change_pct": q["change_pct"],
+                "display": {"close": q["display"]["close"], "change_pct": q["display"]["change_pct"]},
+            })
+        except Exception as e:
+            errors.append(f"global {m['symbol']}: {type(e).__name__}: {e}")
+    return out, errors
+
+
 # ---------- assemble ----------
 
 def build(now: datetime | None = None) -> dict:
@@ -298,7 +326,8 @@ def build(now: datetime | None = None) -> dict:
 
     dividends, div_err = fetch_dividends(watchlist["tickers"], now.date())
     news, news_err = fetch_news(feeds_cfg, build_alias_patterns(watchlist["tickers"]), now)
-    errors += div_err + news_err
+    global_markets, glob_err = fetch_global(now)
+    errors += div_err + news_err + glob_err
 
     status, reason = "ok", "fresh data"
     if market_date < expected:
@@ -313,6 +342,7 @@ def build(now: datetime | None = None) -> dict:
         "expected_market_date": expected.isoformat(),
         "index": index,
         "watchlist": rows,
+        "global": global_markets,
         "dividends": dividends,
         "news": news,
         "errors": errors,

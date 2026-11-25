@@ -1,0 +1,26 @@
+# Price/volume alerts during IDX market hours. Managed by `brief-alerts`
+# (Telegram: /alert). Checked every 15 minutes by the Hermes cron job
+# "ihsg-alerts" — plain Python, no LLM, so it costs nothing.
+#
+# Which stocks: every watchlist stock (unless turned off below) plus any
+# stock listed under `extra` (alert-only, not in the daily brief).
+#
+# move_pct  : alert when the day's move vs yesterday's close reaches ±this %.
+#             Fires again each time the move grows by another step
+#             (3% → 6% → 9%).
+# fast_pct  : sudden move: alert when the price moved this % since the
+#             previous check (~15 minutes earlier). Each window is its own alert.
+# volume_x  : alert once a day when today's volume so far reaches this many
+#             times the 20-day average.
+# Yahoo's IDX prices are delayed ~10–15 minutes.
+
+defaults:
+  move_pct: 3.0
+  fast_pct: 2.0
+  volume_x: 2.5
+index:            # IHSG itself
+  enabled: true
+  move_pct: 1.5
+  fast_pct: 1.0
+extra: []         # e.g. [BMRI, GOTO]
+overrides: {}     # e.g. {TLKM: {move_pct: 2.0}, ASII: {enabled: false}}

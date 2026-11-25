@@ -33,6 +33,13 @@ add selection and one-line explanations, never new facts.
    📊 Snapshot
    (3 lines: IHSG close + change, 5-day direction, volume vs 20-day avg)
 
+   🌏 Global semalam
+   (from `global`, grouped on 3 short lines, name + change_pct, e.g.
+   "AS: Dow +0,30% · S&P 500 -0,10% · Nasdaq +0,25%"
+   "Asia: Nikkei … · Hang Seng … · STI …"
+   "USD/IDR {close} ({change_pct}) · Brent … · Emas … · CPO …"
+   Skip any market missing from `global`.)
+
    📈 Watchlist
    (one line per ticker: symbol, close, change. Add "— why: …" only if a
    news item in data.json explains the move; cite it. Otherwise no "why".)

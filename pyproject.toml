@@ -17,6 +17,10 @@ dev = ["pytest>=8.0"]
 brief-fetch = "brief.fetcher:main"
 brief-verify = "brief.verify:main"
 brief-check-day = "brief.holidays:main"
+brief-analyze = "brief.analysis:main"
+brief-watch = "brief.watchlist:main"
+brief-alerts = "brief.alerts:main"
+brief-report = "brief.report:main"
 
 [build-system]
 requires = ["hatchling"]

@@ -119,8 +119,44 @@ is an always-on machine.
 - Skip IDX holidays and weekends.
 - No buy/sell/hold/target-price language.
 
+## On-demand analysis (`/analysis`)
+
+- [x] `brief-analyze --period week|month`: rolling 5 / 21 sessions, price
+      performance, valuation (P/E, PBV, trailing yield, ROE, earnings growth,
+      52-week range), news merged from saved daily snapshots, outlook
+      (ex-dividend 30 days, earnings 60 days)
+- [x] Skill `skills/analysis/SKILL.md`, linked into `~/.hermes/skills/finance/`
+- [ ] Test on Telegram: `/analysis weekly BBCA`, `/analysis monthly telkom`, `/analysis weekly BMRI`, `/analysis` (should show the format help)
+- [ ] News recap fills up over time: needs the daily brief to run so
+      `data/YYYY-MM-DD.json` snapshots exist (full week ~2 Dec, full month ~25 Dec)
+
 ## Later (not now)
 
 - Keep the daily `data/YYYY-MM-DD.json` files. They're already saved and
   could become a dataset.
 - RAG over IDX annual reports, then a full-stack app.
+
+## Watchlist, alerts, global markets (added 2026-11-25)
+
+- [x] 🌏 Global semalam in the 07:30 brief (`config/global.yaml`): Dow, S&P 500,
+      Nasdaq, Nikkei, Hang Seng, STI, USD/IDR, Brent, gold, CPO. Coal isn't on Yahoo.
+- [x] `/watch list | add | remove`: edits `config/watchlist.yaml` (max 15, codes validated)
+- [x] `/alert …`: per-stock thresholds, on/off, alert-only extra stocks (`config/alerts.yaml`)
+- [x] Cron `ihsg-alerts`: `*/15 9-16 * * 1-5` WIB, `--no-agent` script
+      `~/.hermes/scripts/ihsg-alerts.sh`, no LLM cost. Repeat alerts only when a
+      move reaches the next step (3% → 6%); volume once a day. Errors are logged
+      to `~/.hermes/logs/ihsg-alerts.log`, never sent.
+- [ ] Watch the first trading day of alerts; tune thresholds if too noisy/quiet
+
+## Model split (2026-11-25)
+
+| Task | Model | Set where |
+|---|---|---|
+| Everything typed in chat (`/watch`, `/alert`, `/ihsg-brief`, starting `/analysis`) | `hy4-flash:free` | `hermes config set model.default …` |
+| 07:30 brief (cron `ihsg-morning`) | `hy4-flash:free` | `hermes cron edit ihsg-morning --model …` |
+| `/analysis` report text | `deepseek-v4.1-flash` | `config/llm.yaml` → `models.analysis` |
+| Intraday alerts (cron `ihsg-alerts`) | none | — |
+
+Hermes has one default chat model and no per-skill model, so "serious" reports
+are written by `brief-report` calling the model directly, number-checked by
+`brief-verify` (with retries), and delivered by `hermes send`.

@@ -1,0 +1,15 @@
+# Models for reports that Python writes by calling the LLM directly
+# (`brief-report`). Chat in Telegram/terminal uses Hermes's default model
+# instead (`hermes config get model.default`), and scheduled jobs use the
+# model set on the job (`hermes cron edit <job> --model ...`).
+#
+# The API key is NOT stored here. It's read, in this order, from:
+#   1. env var NIBIE_API_KEY
+#   2. this repo's .env (NIBIE_API_KEY=...)
+#   3. Hermes's own ~/.hermes/.env (the NibieRouter key `hermes setup` saved)
+
+base_url: https://router.nibie.app/v1
+models:
+  analysis: deepseek-v4.1-flash     # /analysis reports
+max_output_tokens: 4000
+timeout_seconds: 180
