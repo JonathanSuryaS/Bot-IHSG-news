@@ -1,13 +1,31 @@
-# IDX non-trading days for 2026 (public holidays + cuti bersama bursa).
-# Copy these by hand from IDX's official announcement (idx.co.id ->
-# "Hari Libur Bursa"). Don't guess them: the dates for Islamic holidays
-# shift and the official list is final.
-#
-# holidays.py refuses to run if the current year's file is missing or empty,
-# so the brief fails safe ("No fresh data today") instead of running on a
-# holiday.
+# IDX non-trading days 2026 (libur nasional + cuti bersama + libur bursa).
+# BEI announcement Peng-00171/BEI.POP/09-2025, as reproduced by Fortune IDN:
+# https://www.fortuneidn.com/market/kalender-jadwal-libur-bursa-2026-d7w03-00-lflgw-hkfx2s
+# Holidays falling on weekends (Idul Fitri 21–22 Mar, Paskah 5 Apr,
+# Waisak 31 May) are omitted; weekends are skipped anyway.
+# BEI may revise this; re-check idx.co.id if a date is announced/changed.
 
 year: 2026
-holidays: []
-#  - date: 2026-01-01
-#    name: Tahun Baru Masehi
+holidays:
+  - {date: 2026-01-01, name: Tahun Baru Masehi}
+  - {date: 2026-01-16, name: Isra Mikraj}
+  - {date: 2026-02-16, name: Cuti Bersama Imlek}
+  - {date: 2026-02-17, name: Tahun Baru Imlek}
+  - {date: 2026-03-18, name: Cuti Bersama Nyepi}
+  - {date: 2026-03-19, name: Hari Suci Nyepi}
+  - {date: 2026-03-20, name: Cuti Bersama Idul Fitri}
+  - {date: 2026-03-23, name: Cuti Bersama Idul Fitri}
+  - {date: 2026-03-24, name: Cuti Bersama Idul Fitri}
+  - {date: 2026-04-03, name: Wafat Yesus Kristus}
+  - {date: 2026-05-01, name: Hari Buruh Internasional}
+  - {date: 2026-05-14, name: Kenaikan Yesus Kristus}
+  - {date: 2026-05-15, name: Cuti Bersama Kenaikan Yesus Kristus}
+  - {date: 2026-05-27, name: Idul Adha}
+  - {date: 2026-05-28, name: Cuti Bersama Idul Adha}
+  - {date: 2026-06-01, name: Hari Lahir Pancasila}
+  - {date: 2026-06-16, name: Tahun Baru Islam}
+  - {date: 2026-08-17, name: Proklamasi Kemerdekaan}
+  - {date: 2026-08-25, name: Maulid Nabi Muhammad SAW}
+  - {date: 2026-12-24, name: Cuti Bersama Natal}
+  - {date: 2026-12-25, name: Hari Natal}
+  - {date: 2026-12-31, name: Libur Bursa (akhir tahun)}

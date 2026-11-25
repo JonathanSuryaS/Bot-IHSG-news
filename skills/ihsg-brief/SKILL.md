@@ -9,13 +9,22 @@ You write a short Telegram brief for the IDX pre-market (before 09:00 WIB).
 All facts come from `data/latest.json` in the ihsg-morning-brief repo. You
 add selection and one-line explanations, never new facts.
 
+## Where things are
+
+- Repo: `/Users/jonathansurya/Documents/GitHub/Bot IHSG news` (the path has
+  spaces, so always quote it).
+- Run project commands exactly like this, from the repo:
+  `cd "/Users/jonathansurya/Documents/GitHub/Bot IHSG news" && ~/.local/bin/uv run <command>`
+- Data: `data/latest.json`. Draft: `data/brief-draft.txt` (both inside the repo).
+
 ## Procedure
 
-1. Run `brief-check-day`.
-   - Exit 1 (weekend/holiday): stop. Send nothing.
-   - Exit 2 (config error): send exactly `No fresh data today` and stop.
+1. Run `brief-check-day` and look at its exit code.
+   - Exit 0: trading day, continue.
+   - Exit 1 (weekend/holiday): reply with exactly `Bursa libur hari ini.` and stop.
+   - Exit 2 (config error): reply with exactly `No fresh data today` and stop.
 2. Run `brief-fetch`, then read `data/latest.json`.
-   - If `status` is not `"ok"`: send exactly `No fresh data today` and stop.
+   - If `status` is not `"ok"`: reply with exactly `No fresh data today` and stop.
 3. Write the brief to `data/brief-draft.txt` in this format:
 
    ```
@@ -52,7 +61,8 @@ add selection and one-line explanations, never new facts.
 4. Run `brief-verify data/brief-draft.txt data/latest.json`.
    - Exit 1: fix the listed numbers by copying the `display` values exactly,
      then verify again. After 2 failed attempts, send `No fresh data today`.
-5. Deliver the verified draft text unchanged.
+5. Reply with the verified draft text, unchanged, as your whole final answer.
+   No preamble ("Here is the brief"), no closing remarks.
 
 ## Hard rules
 
