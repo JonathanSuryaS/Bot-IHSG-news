@@ -28,12 +28,26 @@ add selection and one-line explanations, never new facts.
    (one line per ticker: symbol, close, change. Add "— why: …" only if a
    news item in data.json explains the move; cite it. Otherwise no "why".)
 
-   📰 Berita utama
-   (3–5 items: one-sentence summary, [tickers], source link)
+   📰 Berita pasar
+   (3–5 items from category "market": one-sentence summary, [tickers], link.
+   Prefer items with watchlist tickers, then items that move the whole index.)
+
+   🏛 Ekonomi
+   (2–3 items from category "economy": rupiah, BI rate, inflation, fiscal
+   policy, regulation (OJK/IDX), commodities, big government decisions.
+   Skip lifestyle, HR/civil-service, and promo/CSR stories.)
 
    📅 Dividen 14 hari
-   (symbol, ex-date, amount, or "Tidak ada")
+   (symbol, ex-date, amount; if amount is null write "nilai belum diumumkan";
+   if the list is empty write "Tidak ada")
    ```
+
+   Field notes:
+   - `index.display.volume_vs_20d` can be null. Then leave volume out of the
+     snapshot; don't say "volume normal".
+   - If `errors` names a watchlist ticker, write "data tidak tersedia" for it.
+     Ignore other errors (feeds, holidays): they're for the developer.
+   - Many news items repeat the same story from different sources. Pick one.
 
 4. Run `brief-verify data/brief-draft.txt data/latest.json`.
    - Exit 1: fix the listed numbers by copying the `display` values exactly,

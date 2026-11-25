@@ -1,17 +1,67 @@
-# Candidate RSS feeds. NOT VERIFIED YET.
-# Set `verified: true` only after confirming the URL returns items from the
-# last 24h. fetcher.py skips anything not verified.
+# RSS feeds. Probed 2026-11-25; `verified: true` = returned items <24h old.
+# fetcher.py only reads verified feeds. Re-probe if a feed goes quiet.
+#
+# category:
+#   market  - stocks, IDX, banking/finance companies
+#   economy - macro, policy, rupiah, BI/OJK, government, commodities
 
 feeds:
-  - name: CNBC Indonesia - Market
+  # --- market ---
+  - name: CNBC Indonesia Market
     url: https://www.cnbcindonesia.com/market/rss
-    verified: false
-  - name: Kontan - Investasi
+    category: market
+    verified: true
+  - name: Kontan Investasi
     url: https://investasi.kontan.co.id/rss
-    verified: false
-  - name: Bisnis.com - Market
-    url: https://market.bisnis.com/rss
-    verified: false
+    category: market
+    verified: true
+  - name: Kontan Keuangan
+    url: https://keuangan.kontan.co.id/rss
+    category: market
+    verified: true
+  - name: Antara Bursa
+    url: https://www.antaranews.com/rss/ekonomi-bursa.xml
+    category: market
+    verified: true
+
+  # --- economy ---
+  - name: CNBC Indonesia News
+    url: https://www.cnbcindonesia.com/news/rss
+    category: economy
+    verified: true
+  - name: Kontan Nasional
+    url: https://nasional.kontan.co.id/rss
+    category: economy
+    verified: true
+  - name: Antara Finansial
+    url: https://www.antaranews.com/rss/ekonomi-finansial.xml
+    category: economy
+    verified: true
+  - name: CNN Indonesia Ekonomi
+    url: https://www.cnnindonesia.com/ekonomi/rss
+    category: economy
+    verified: true
+  - name: Detik Finance
+    url: https://finance.detik.com/rss
+    category: economy
+    verified: true
+  - name: Liputan6 Bisnis
+    url: https://feed.liputan6.com/rss/bisnis
+    category: economy
+    verified: true
+  - name: Republika Ekonomi
+    url: https://www.republika.co.id/rss/ekonomi
+    category: economy
+    verified: true
+
+  # --- tested, not usable (2026-11-25) ---
+  # Bisnis.com: every RSS URL returns 403 to non-browser clients
+  # Tempo Bisnis (rss.tempo.co/bisnis): newest item ~17 days old
+  # Antara Ekonomi (antaranews.com/rss/ekonomi.xml): newest item ~4 days old
+  # Kontan Industri works but is mostly company PR; add if you want it:
+  #   https://industri.kontan.co.id/rss
 
 lookback_hours: 24
-max_items_per_feed: 30
+max_items_per_feed: 15      # newest N per feed; keeps data.json small for the LLM
+summary_chars: 200
+skip_title_prefixes: ["Video:", "Foto:", "VIDEO:", "FOTO:"]

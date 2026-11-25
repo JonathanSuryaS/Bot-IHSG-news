@@ -10,6 +10,14 @@ config/*.yaml ─► brief-fetch (Python, no LLM) ─► data/latest.json
           Hermes cron (07:30 WIB, Mon–Fri) ─► skill "ihsg-brief" ─► brief-verify ─► Telegram
 ```
 
+New to Hermes? Start with [docs/how-hermes-works.md](docs/how-hermes-works.md),
+then follow [docs/build-plan.md](docs/build-plan.md).
+
+## Docs
+
+- [docs/hermes-basics.md](docs/hermes-basics.md): how Hermes Agent works, with a command cheat sheet
+- [docs/plan.md](docs/plan.md): build phases with checklists
+
 ## Setup
 
 ```bash
