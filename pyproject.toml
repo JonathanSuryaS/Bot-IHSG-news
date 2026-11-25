@@ -1,0 +1,29 @@
+[project]
+name = "ihsg-morning-brief"
+version = "0.1.0"
+description = "Weekday pre-market IHSG brief delivered to Telegram via Hermes Agent"
+requires-python = ">=3.11"
+dependencies = [
+    "yfinance>=0.2.40",
+    "feedparser>=6.0",
+    "python-dateutil>=2.9",
+    "pyyaml>=6.0",
+]
+
+[dependency-groups]
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+brief-fetch = "brief.fetcher:main"
+brief-verify = "brief.verify:main"
+brief-check-day = "brief.holidays:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/brief"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]

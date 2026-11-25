@@ -1,0 +1,13 @@
+# IDX non-trading days for 2026 (public holidays + cuti bersama bursa).
+# Copy these by hand from IDX's official announcement (idx.co.id ->
+# "Hari Libur Bursa"). Don't guess them: the dates for Islamic holidays
+# shift and the official list is final.
+#
+# holidays.py refuses to run if the current year's file is missing or empty,
+# so the brief fails safe ("No fresh data today") instead of running on a
+# holiday.
+
+year: 2026
+holidays: []
+#  - date: 2026-01-01
+#    name: Tahun Baru Masehi

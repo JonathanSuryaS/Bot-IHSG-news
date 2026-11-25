@@ -1,0 +1,17 @@
+# Candidate RSS feeds. NOT VERIFIED YET.
+# Set `verified: true` only after confirming the URL returns items from the
+# last 24h. fetcher.py skips anything not verified.
+
+feeds:
+  - name: CNBC Indonesia - Market
+    url: https://www.cnbcindonesia.com/market/rss
+    verified: false
+  - name: Kontan - Investasi
+    url: https://investasi.kontan.co.id/rss
+    verified: false
+  - name: Bisnis.com - Market
+    url: https://market.bisnis.com/rss
+    verified: false
+
+lookback_hours: 24
+max_items_per_feed: 30

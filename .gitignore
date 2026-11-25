@@ -1,0 +1,20 @@
+# secrets
+.env
+.env.*
+!.env.example
+
+# daily snapshots (kept locally, not committed)
+data/*
+!data/.gitkeep
+
+# python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+dist/
+
+# os / editor
+.DS_Store
+.vscode/
