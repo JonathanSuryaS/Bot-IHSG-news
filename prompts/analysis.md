@@ -20,6 +20,16 @@ Analisis {mingguan|bulanan} {focus symbol without .JK} — {focus.name}
 dates, best/worst day, up vs down days, volume vs previous period if not
 null. One sentence on IHSG itself for context.)
 
+🕯 Teknikal (chart harian terlampir)
+(from `technical.display`, 3–4 short lines:
+trend: close vs ma_fast_label/ma_fast and ma_slow_label/ma_slow, then `trend`;
+momentum: RSI 14 `rsi_14` + `rsi_zone`, and `macd`;
+area: support_20 and resistance_20 (`window`), volume_vs_20 if not null;
+last candle: `last_candle_pattern`.
+Then one sentence linking it to Kinerja, e.g. whether the period's move
+agrees with the trend. Describe only; support/resistance are past levels,
+not targets. If `technical` is null, skip this whole section.)
+
 💰 Valuasi
 (one line: P/E, PBV, dividend yield, ROE, earnings growth, market cap,
 distance from 52-week high. Then 2–3 sentences comparing with `peers`:
@@ -50,7 +60,7 @@ Notes:
   `(di luar watchlist — dibandingkan dengan watchlist)`
 - Any `display` value can be null (often valuation for small stocks). Then
   leave that metric out; don't guess.
-- Keep the whole report under 3.500 characters.
+- Keep the whole report under 3.600 characters.
 
 ## Hard rules
 

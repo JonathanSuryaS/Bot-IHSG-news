@@ -1,0 +1,45 @@
+📋 Menu IHSG Bot
+
+🌅 Otomatis
+• Brief pagi — 07:30 WIB: penutupan kemarin, global, berita
+• Laporan penutupan — 16:45 WIB: hasil hari ini, alert, berita
+• Alert harga & volume — tiap 15 menit saat jam bursa
+
+📊 Analisis
+/analysis weekly BBCA — analisis mingguan + chart
+/analysis monthly TLKM — analisis bulanan
+(kode saham apa saja, contoh BMRI, GOTO)
+
+🏦 Fundamental & valuasi
+/fundamental BBRI — laporan keuangan 4 tahun + tren
+/valuasi BBRI — model DCF/DDM + tabel sensitivitas + file Excel
+
+🕯 Chart
+/chart BBRI — candlestick harian + MA, RSI, MACD, support/resistance
+/chart IHSG weekly — mingguan, ±2 tahun
+
+💰 Dividen
+/dividen BBRI — riwayat, tren & yield dividen
+/dividen BBRI 3800 — + yield dari harga beli kamu
+
+📚 Belajar
+/formula — daftar rumus (ROE, P/E, PBV, DER, ...)
+/formula ROE — arti, rumus, contoh, cara baca
+/formula ROE BBRI — + nilai BBRI sekarang
+
+📋 Watchlist
+/watch list — lihat watchlist
+/watch add BMRI — tambah saham
+/watch remove ASII — hapus saham
+
+🔔 Alert
+/alert show — lihat pengaturan
+/alert set TLKM move 2 — alert gerak harian ±2%
+/alert set TLKM fast 1.5 — alert gerak cepat ±1,5%/15 menit
+/alert set BBCA volume 3 — alert volume 3x rata-rata
+/alert off ASII · /alert on ASII — matikan / nyalakan
+/alert add GOTO — alert saham di luar watchlist
+
+🗞 Lainnya
+/ihsg-brief — kirim brief pagi sekarang
+/menu — daftar ini

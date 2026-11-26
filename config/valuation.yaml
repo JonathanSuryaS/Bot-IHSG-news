@@ -1,0 +1,27 @@
+# Assumptions for /valuasi (two-stage DCF / dividend discount model).
+# These are YOUR assumptions: change them and the result changes. That's the
+# point of a valuation model. Percent values are written as numbers (6.5 = 6,5%).
+
+# Cost of equity (CAPM) = risk_free + beta × equity_risk_premium
+risk_free_pct: 6.5            # ~ yield SBN (obligasi pemerintah) 10 tahun. Update sesekali.
+equity_risk_premium_pct: 7.0  # tambahan imbal hasil yang diminta untuk saham Indonesia
+beta: auto                    # auto = dihitung vs IHSG (2 tahun data mingguan, Blume-adjusted)
+beta_min: 0.6                 # batas supaya beta yang aneh tidak merusak model
+beta_max: 1.8
+
+# Growth
+stage1_years: 5               # tahun pertumbuhan "tinggi"
+stage1_growth: auto           # auto = CAGR historis (EPS untuk DDM, pendapatan untuk DCF)
+stage1_growth_min_pct: 0.0
+stage1_growth_max_pct: 12.0
+terminal_growth_pct: 5.0      # pertumbuhan selamanya setelah tahun ke-5 (≈ inflasi + sedikit)
+
+# Sensitivity table: cost of equity ± these steps, terminal growth ± these steps
+sensitivity_r_steps_pct: [-2, -1, 0, 1, 2]
+sensitivity_g_steps_pct: [-1, 0, 1]
+
+# Per-stock overrides, e.g.
+# overrides:
+#   BBRI: {beta: 1.1, stage1_growth: 6, method: ddm}
+#   TLKM: {method: dcf}
+overrides: {}

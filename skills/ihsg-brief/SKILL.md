@@ -30,8 +30,8 @@ add selection and one-line explanations, never new facts.
    ```
    IHSG pagi — {market_date}
 
-   📊 Snapshot
-   (3 lines: IHSG close + change, 5-day direction, volume vs 20-day avg)
+   📊 Penutupan kemarin
+   (3 lines: IHSG close yesterday + change, 5-day direction, volume vs 20-day avg)
 
    🌏 Global semalam
    (from `global`, grouped on 3 short lines, name + change_pct, e.g.
@@ -40,7 +40,7 @@ add selection and one-line explanations, never new facts.
    "USD/IDR {close} ({change_pct}) · Brent … · Emas … · CPO …"
    Skip any market missing from `global`.)
 
-   📈 Watchlist
+   📈 Watchlist (penutupan kemarin)
    (one line per ticker: symbol, close, change. Add "— why: …" only if a
    news item in data.json explains the move; cite it. Otherwise no "why".)
 

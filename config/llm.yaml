@@ -10,6 +10,7 @@
 
 base_url: https://router.nibie.app/v1
 models:
-  analysis: deepseek-v4.1-flash     # /analysis reports
+  analysis: deepseek-v4.1-flash-1017   # /analysis reports (uses the token package quota)
+  closing: deepseek-v4.1-flash-1017    # 16:45 closing report
 max_output_tokens: 4000
 timeout_seconds: 180

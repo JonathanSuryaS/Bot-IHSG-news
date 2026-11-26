@@ -2,6 +2,8 @@
 
 Usage:
   brief-report analysis <weekly|monthly> <stock> [--send] [--print]
+  brief-report closing [--send] [--print]     # after-market report; prints
+                                              # nothing on non-trading days
 
 Why this exists: Hermes uses one default model for everything typed in chat.
 To keep cheap commands (/watch, /alert) on a free model while analysis runs
@@ -139,7 +141,8 @@ def write_verified(system: str, user: str, data_text: str, model: str, cfg: dict
 
 # ---------- reports ----------
 
-def analysis_report(period_word: str, stock: str) -> str:
+def analysis_report(period_word: str, stock: str) -> tuple[str, str | None]:
+    """Report text and the chart image path (None if the chart failed)."""
     from brief.analysis import StockNotFound, build
 
     period = PERIOD_WORDS.get(period_word.lower())
@@ -153,6 +156,7 @@ def analysis_report(period_word: str, stock: str) -> str:
     except Exception as e:
         raise ReportError(f"data analisis tidak tersedia ({type(e).__name__})") from e
 
+    image = (data.get("technical") or {}).pop("image", None)
     data_text = json.dumps(data, ensure_ascii=False, indent=1)
     (DATA_DIR / f"analysis-{period}.json").write_text(data_text)
 
@@ -160,7 +164,25 @@ def analysis_report(period_word: str, stock: str) -> str:
     label = "mingguan" if period == "week" else "bulanan"
     user = (f"Request: analisis {label} untuk {stock}.\n\nJSON:\n{data_text}")
     system = (PROMPTS_DIR / "analysis.md").read_text()
-    return write_verified(system, user, data_text, cfg["models"]["analysis"], cfg, api_key())
+    text = write_verified(system, user, data_text, cfg["models"]["analysis"], cfg, api_key())
+    return text, image
+
+
+def closing_report() -> str:
+    """Closing report text, or "" on a non-trading day (cron stays silent)."""
+    from brief.closing import build_and_save
+
+    data, path = build_and_save()
+    if data["status"] == "not_trading_day":
+        return ""
+    if data["status"] != "ok":
+        raise ReportError(f"data penutupan belum tersedia ({data.get('status_reason')})")
+    data_text = path.read_text()
+    cfg = load_llm_cfg()
+    model = cfg["models"].get("closing") or cfg["models"]["analysis"]
+    system = (PROMPTS_DIR / "closing.md").read_text()
+    user = f"Laporan penutupan {data['date']}.\n\nJSON:\n{data_text}"
+    return write_verified(system, user, data_text, model, cfg, api_key())
 
 
 # ---------- output ----------
@@ -178,14 +200,26 @@ def main(argv: list[str] | None = None) -> int:
     send = "--send" in args
     show = "--print" in args or not send
     rest = [a for a in args if a not in ("--send", "--print")]
+    if rest == ["closing"]:
+        try:
+            text, ok = closing_report(), True
+        except ReportError as e:
+            text, ok = f"⚠️ Laporan penutupan gagal: {e}", False
+        if text:
+            (DATA_DIR / "closing-report.txt").write_text(text)
+            if send:
+                send_telegram(text)
+            if show:
+                print(text)
+        return 0 if ok else 1
     if len(rest) < 3 or rest[0] != "analysis":
         print("Usage: brief-report analysis <weekly|monthly> <stock> [--send] [--print]", file=sys.stderr)
         return 2
     period_word, stock = rest[1], " ".join(rest[2:])
 
-    ok = True
+    ok, image = True, None
     try:
-        text = analysis_report(period_word, stock)
+        text, image = analysis_report(period_word, stock)
     except ReportError as e:
         ok = False
         text = str(e) if str(e).startswith(("Format:", "Saham ")) else f"⚠️ Analisis gagal: {e}"
@@ -193,6 +227,8 @@ def main(argv: list[str] | None = None) -> int:
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     (DATA_DIR / "analysis-report.txt").write_text(text)
     if send:
+        if image:
+            send_telegram(f"MEDIA:{image}")
         send_telegram(text)
     if show:
         print(text)

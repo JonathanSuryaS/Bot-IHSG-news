@@ -8,6 +8,8 @@ dependencies = [
     "feedparser>=6.0",
     "python-dateutil>=2.9",
     "pyyaml>=6.0",
+    "matplotlib>=3.11.2",
+    "openpyxl>=3.1.5",
 ]
 
 [dependency-groups]
@@ -21,6 +23,12 @@ brief-analyze = "brief.analysis:main"
 brief-watch = "brief.watchlist:main"
 brief-alerts = "brief.alerts:main"
 brief-report = "brief.report:main"
+brief-closing = "brief.closing:main"
+brief-dividend = "brief.dividend:main"
+brief-formula = "brief.formula:main"
+brief-chart = "brief.chart:main"
+brief-fundamental = "brief.fundamental:main"
+brief-valuation = "brief.valuation:main"
 
 [build-system]
 requires = ["hatchling"]

@@ -6,11 +6,18 @@ Short version. Details: [plan.md](plan.md), [hermes-basics.md](hermes-basics.md)
 
 | Feature | How you use it | Model |
 |---|---|---|
-| Morning brief | arrives by itself, weekdays 07:30 WIB | hy4-flash:free |
+| Morning brief | arrives by itself, weekdays 07:30 WIB | deepseek-v4.1-flash-1017 |
+| Closing report | arrives by itself, weekdays 16:45 WIB (cron `ihsg-closing`, no agent loop) | deepseek-v4.1-flash-1017 via `config/llm.yaml` |
 | Price alerts | arrive by themselves every 15 min in market hours, only when something moves | none (free) |
-| Stock analysis | `/analysis weekly BBCA` · `/analysis monthly TLKM` | deepseek-v4.1-flash |
-| Watchlist | `/watch list` · `/watch add BMRI` · `/watch remove ASII` | hy4-flash:free |
-| Alert settings | `/alert show` · `/alert set TLKM move 2` · `/alert off ASII` | hy4-flash:free |
+| Stock analysis (+ chart image & 🕯 Teknikal section) | `/analysis weekly BBCA` · `/analysis monthly TLKM` | deepseek-v4.1-flash-1017 |
+| Fundamentals | `/fundamental BBRI` (4 years of statements + trends) | none (Python) |
+| Valuation | `/valuasi BBRI` (DCF/DDM, sensitivity, Excel file; assumptions in `config/valuation.yaml`) | none (Python) |
+| Chart | `/chart BBRI` · `/chart IHSG weekly` (image + MA/RSI/MACD/support/resistance/candle pattern) | none for the numbers (Python); chat model only starts it |
+| Dividends | `/dividen BBRI` · `/dividen BBRI 3800` (with your buy price) | none for the numbers (Python); chat model only relays |
+| Learn ratios | `/formula` · `/formula ROE` · `/formula ROE BBRI` (text in `config/formulas.yaml`) | none for the content (Python); chat model only relays |
+| Watchlist | `/watch list` · `/watch add BMRI` · `/watch remove ASII` | deepseek-v4.1-flash-1017 |
+| Alert settings | `/alert show` · `/alert set TLKM move 2` · `/alert off ASII` | deepseek-v4.1-flash-1017 |
+| Command list | `/menu` (text in `config/menu.txt`) | none (quick command, 0 tokens) |
 
 To change a model:
 - chat (`/watch`, `/alert`, ...): `hermes config set model.default <model>` then `hermes gateway restart`
@@ -32,7 +39,7 @@ To change a model:
 
 ## Next (pick later, one at a time)
 
-1. Closing report at 16:45: compares the close with the morning (DeepSeek)
+1. ~~Closing report~~ done: `ihsg-closing` 16:45
 2. Read briefs for a week and tune the prompts
 3. Move to a VPS so the Mac can be off
 4. Later: RAG over annual reports, web app

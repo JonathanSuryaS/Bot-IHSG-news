@@ -1,0 +1,245 @@
+# Glossary for /formula. Edit freely: text is shown as-is.
+# yahoo: field in yfinance .info used for the live example (/formula ROE BBRI)
+# kind:  how to format it
+#   ratio   -> 7,27x          pct   -> fraction 0.187 shown as 18,74%
+#   rp      -> Rp422          rp_t  -> Rp462,57 T (trillions)
+#   der     -> Yahoo gives %, 56.3 shown as 0,56x
+# "Cara baca" is a general rule of thumb, not a recommendation.
+
+groups:
+  - name: "📈 Valuasi (harga vs bisnis)"
+    terms: [PE, PBV, EPS, BVPS, MCAP, DY]
+  - name: "💪 Profitabilitas (laporan laba rugi)"
+    terms: [ROE, ROA, NPM, OPM, GPM]
+  - name: "🏦 Kesehatan (neraca)"
+    terms: [DER, CR]
+  - name: "💰 Dividen & pertumbuhan"
+    terms: [DPR, EG, RG]
+  - name: "📊 Risiko & portofolio"
+    terms: [BETA, CAGR, YOC]
+
+terms:
+  PE:
+    name: P/E (Price to Earnings, PER)
+    aliases: [PER, "P/E", PE, "PRICE TO EARNINGS"]
+    source: Harga saham + laporan laba rugi
+    meaning: Berapa tahun laba perusahaan "dibayar" oleh harga sahamnya sekarang.
+    formula: Harga saham ÷ EPS (laba per saham, 12 bulan terakhir)
+    example: Harga Rp3.000, EPS Rp300 → P/E 10x
+    read: >-
+      Makin kecil makin "murah" dibanding labanya. Bandingkan dengan saham
+      sejenis (bank vs bank), bukan antar sektor. P/E rendah bisa juga karena
+      laba diperkirakan turun.
+    yahoo: trailingPE
+    kind: ratio
+
+  PBV:
+    name: PBV (Price to Book Value)
+    aliases: [PB, "P/B", "P/BV", "PRICE TO BOOK"]
+    source: Harga saham + neraca
+    meaning: Harga saham dibanding nilai buku (aset − utang) per saham.
+    formula: Harga saham ÷ BVPS (nilai buku per saham)
+    example: Harga Rp3.000, nilai buku Rp2.000 → PBV 1,5x
+    read: >-
+      PBV 1x = harga sama dengan nilai buku. Paling berguna untuk bank dan
+      perusahaan aset berat. Lihat bersama ROE: ROE tinggi biasanya membuat
+      PBV juga tinggi.
+    yahoo: priceToBook
+    kind: ratio
+
+  EPS:
+    name: EPS (Earnings per Share)
+    aliases: ["LABA PER SAHAM"]
+    source: Laporan laba rugi
+    meaning: Laba bersih yang menjadi bagian tiap 1 lembar saham.
+    formula: Laba bersih ÷ jumlah saham beredar
+    example: Laba Rp60 T, saham 150 miliar lembar → EPS Rp400
+    read: EPS yang naik dari tahun ke tahun berarti laba per saham bertumbuh.
+    yahoo: trailingEps
+    kind: rp
+
+  BVPS:
+    name: BVPS (Book Value per Share)
+    aliases: ["BOOK VALUE", "NILAI BUKU"]
+    source: Neraca
+    meaning: Ekuitas (aset − utang) yang menjadi bagian tiap 1 lembar saham.
+    formula: Total ekuitas ÷ jumlah saham beredar
+    example: Ekuitas Rp300 T, saham 150 miliar lembar → BVPS Rp2.000
+    read: Dasar perhitungan PBV. Naik berarti kekayaan bersih perusahaan bertambah.
+    yahoo: bookValue
+    kind: rp
+
+  MCAP:
+    name: Market cap (kapitalisasi pasar)
+    aliases: [MARKETCAP, "MARKET CAP", KAPITALISASI]
+    source: Harga saham
+    meaning: Harga "seluruh perusahaan" menurut pasar.
+    formula: Harga saham × jumlah saham beredar
+    example: Rp3.000 × 150 miliar lembar → Rp450 T
+    read: >-
+      Big cap (ratusan triliun) biasanya lebih stabil dan likuid; small cap
+      bisa tumbuh cepat tapi lebih fluktuatif.
+    yahoo: marketCap
+    kind: rp_t
+
+  DY:
+    name: Dividend yield
+    aliases: [YIELD, "DIVIDEND YIELD", "DIVIDEN YIELD"]
+    source: Harga saham + pembagian dividen
+    meaning: Dividen 12 bulan terakhir dibanding harga saham sekarang.
+    formula: Dividen per saham (12 bulan) ÷ harga saham × 100%
+    example: Dividen Rp300, harga Rp3.000 → 10%
+    read: >-
+      Bandingkan dengan bunga deposito. Yield sangat tinggi kadang karena
+      harganya jatuh, atau dividen sekali saja. Detail: /dividen KODE
+    yahoo: trailingAnnualDividendYield
+    kind: pct
+
+  ROE:
+    name: ROE (Return on Equity)
+    aliases: ["RETURN ON EQUITY"]
+    source: Laporan laba rugi + neraca
+    meaning: Seberapa besar laba yang dihasilkan dari modal milik pemegang saham.
+    formula: Laba bersih ÷ ekuitas rata-rata × 100%
+    example: Laba Rp60 T, ekuitas Rp320 T → ROE 18,75%
+    read: >-
+      Di atas 15% umumnya dianggap kuat. Cek DER juga: ROE bisa tinggi karena
+      utang besar, bukan karena bisnisnya bagus.
+    yahoo: returnOnEquity
+    kind: pct
+
+  ROA:
+    name: ROA (Return on Assets)
+    aliases: ["RETURN ON ASSETS", "RETURN ON ASSET"]
+    source: Laporan laba rugi + neraca
+    meaning: Seberapa efisien seluruh aset menghasilkan laba.
+    formula: Laba bersih ÷ total aset × 100%
+    example: Laba Rp60 T, aset Rp2.000 T → ROA 3%
+    read: >-
+      Bank wajar ROA kecil (sekitar 1–3%) karena asetnya sangat besar.
+      Perusahaan non-bank biasanya lebih tinggi. Bandingkan dalam sektor yang sama.
+    yahoo: returnOnAssets
+    kind: pct
+
+  NPM:
+    name: Net profit margin (NPM)
+    aliases: ["NET MARGIN", "PROFIT MARGIN", "MARGIN LABA BERSIH"]
+    source: Laporan laba rugi
+    meaning: Dari setiap Rp100 pendapatan, berapa yang tersisa sebagai laba bersih.
+    formula: Laba bersih ÷ pendapatan × 100%
+    example: Laba Rp17 T, pendapatan Rp150 T → NPM 11,3%
+    read: Margin naik berarti perusahaan makin efisien atau punya daya tawar harga.
+    yahoo: profitMargins
+    kind: pct
+
+  OPM:
+    name: Operating margin (OPM)
+    aliases: ["OPERATING MARGIN", "MARGIN OPERASI"]
+    source: Laporan laba rugi
+    meaning: Laba dari bisnis inti (sebelum bunga & pajak) dibanding pendapatan.
+    formula: Laba operasi ÷ pendapatan × 100%
+    example: Laba operasi Rp36 T, pendapatan Rp150 T → OPM 24%
+    read: Menunjukkan kekuatan bisnis inti, tanpa efek utang dan pajak.
+    yahoo: operatingMargins
+    kind: pct
+
+  GPM:
+    name: Gross profit margin (GPM)
+    aliases: ["GROSS MARGIN", "MARGIN KOTOR"]
+    source: Laporan laba rugi
+    meaning: Pendapatan dikurangi biaya pokok penjualan, dibanding pendapatan.
+    formula: (Pendapatan − HPP) ÷ pendapatan × 100%
+    example: Pendapatan Rp150 T, HPP Rp60 T → GPM 60%
+    read: Tidak dipakai untuk bank (tidak ada HPP).
+    yahoo: grossMargins
+    kind: pct_nonzero
+
+  DER:
+    name: DER (Debt to Equity Ratio)
+    aliases: ["DEBT TO EQUITY", "D/E"]
+    source: Neraca
+    meaning: Besar utang dibanding modal sendiri.
+    formula: Total utang ÷ total ekuitas
+    example: Utang Rp50 T, ekuitas Rp100 T → DER 0,5x
+    read: >-
+      Di bawah 1x umumnya dianggap aman untuk non-bank. Bank memang berutang
+      besar (dana nasabah), jadi DER tidak dipakai untuk bank.
+    yahoo: debtToEquity
+    kind: der
+
+  CR:
+    name: Current ratio
+    aliases: ["CURRENT RATIO", "RASIO LANCAR"]
+    source: Neraca
+    meaning: Kemampuan membayar utang jangka pendek dengan aset lancar.
+    formula: Aset lancar ÷ liabilitas lancar
+    example: Aset lancar Rp40 T, utang lancar Rp50 T → 0,8x
+    read: Di atas 1x berarti aset lancar cukup menutup utang jangka pendek. Tidak dipakai untuk bank.
+    yahoo: currentRatio
+    kind: ratio
+
+  DPR:
+    name: Payout ratio (DPR)
+    aliases: [PAYOUT, "PAYOUT RATIO", "DIVIDEND PAYOUT"]
+    source: Laporan laba rugi + pembagian dividen
+    meaning: Berapa persen laba yang dibagikan sebagai dividen.
+    formula: Dividen per saham ÷ EPS × 100%
+    example: Dividen Rp300, EPS Rp400 → DPR 75%
+    read: >-
+      Tinggi = dividen besar tapi sedikit laba ditahan untuk tumbuh.
+      Di atas 100% berarti membagi lebih dari labanya (sulit bertahan lama).
+    yahoo: payoutRatio
+    kind: pct
+
+  EG:
+    name: Earnings growth (pertumbuhan laba)
+    aliases: ["EARNINGS GROWTH", "PERTUMBUHAN LABA"]
+    source: Laporan laba rugi
+    meaning: Perubahan laba kuartal terakhir dibanding kuartal yang sama tahun lalu.
+    formula: (Laba sekarang − laba tahun lalu) ÷ laba tahun lalu × 100%
+    example: Rp115 → Rp133 → +15,7%
+    read: Lebih berarti bila konsisten beberapa periode, bukan sekali naik.
+    yahoo: earningsGrowth
+    kind: pct
+
+  RG:
+    name: Revenue growth (pertumbuhan pendapatan)
+    aliases: ["REVENUE GROWTH", "PERTUMBUHAN PENDAPATAN"]
+    source: Laporan laba rugi
+    meaning: Perubahan pendapatan dibanding periode yang sama tahun lalu.
+    formula: (Pendapatan sekarang − tahun lalu) ÷ tahun lalu × 100%
+    example: Rp100 T → Rp105 T → +5%
+    read: Laba naik tanpa pendapatan naik biasanya dari efisiensi, yang ada batasnya.
+    yahoo: revenueGrowth
+    kind: pct
+
+  BETA:
+    name: Beta
+    aliases: []
+    source: Riwayat harga
+    meaning: Seberapa besar saham bergerak dibanding pasar.
+    formula: Kovarians(return saham, return pasar) ÷ varians(return pasar)
+    example: Beta 1,2 → pasar naik 1%, saham rata-rata naik 1,2%
+    read: >-
+      Di atas 1 = lebih liar dari pasar, di bawah 1 = lebih tenang. Nilai Yahoo
+      dihitung terhadap indeks AS, jadi untuk saham IDX hanya perkiraan kasar.
+    yahoo: beta
+    kind: ratio
+
+  CAGR:
+    name: CAGR (Compound Annual Growth Rate)
+    aliases: []
+    source: Hitungan portofolio / laporan beberapa tahun
+    meaning: Rata-rata pertumbuhan per tahun, dengan efek bunga berbunga.
+    formula: (Nilai akhir ÷ nilai awal)^(1 ÷ jumlah tahun) − 1
+    example: Rp10 juta → Rp16 juta dalam 5 tahun → CAGR 9,9% per tahun
+    read: Cara adil membandingkan investasi dengan lama waktu yang berbeda.
+
+  YOC:
+    name: Yield on cost
+    aliases: ["YIELD ON COST"]
+    source: Dividen + harga beli kamu
+    meaning: Dividen dibanding harga saat kamu membeli, bukan harga sekarang.
+    formula: Dividen per saham (12 bulan) ÷ harga beli kamu × 100%
+    example: Dividen Rp346, beli di Rp3.800 → 9,1%
+    read: "Coba langsung: /dividen BBRI 3800"

@@ -52,7 +52,7 @@ PERIODS = {
     "week": {"sessions": 5, "news_days": 7, "news_cap": 80},
     "month": {"sessions": 21, "news_days": 30, "news_cap": 150},
 }
-SNAPSHOT_NAME = re.compile(r"^\d{4}-\d{2}-\d{2}\.json$")
+SNAPSHOT_NAME = re.compile(r"^\d{4}-\d{2}-\d{2}(-close)?\.json$")
 
 
 def pct(a: float, b: float) -> float:
@@ -199,7 +199,7 @@ def news_from_snapshots(data_dir: Path, today: date, days: int, cap: int) -> dic
     start = today - timedelta(days=days - 1)
     files = sorted(
         p for p in data_dir.glob("*.json")
-        if SNAPSHOT_NAME.match(p.name) and start <= date.fromisoformat(p.stem) <= today
+        if SNAPSHOT_NAME.match(p.name) and start <= date.fromisoformat(p.stem[:10]) <= today
     )
     items, seen = [], set()
     for p in files:
@@ -217,9 +217,9 @@ def news_from_snapshots(data_dir: Path, today: date, days: int, cap: int) -> dic
     return {
         "coverage": {
             "days_requested": days,
-            "snapshots_found": len(files),
-            "first": files[0].stem if files else None,
-            "last": files[-1].stem if files else None,
+            "snapshots_found": len({p.stem[:10] for p in files}),   # days, not files
+            "first": files[0].stem[:10] if files else None,
+            "last": files[-1].stem[:10] if files else None,
         },
         "items": items[:cap],
     }
@@ -306,6 +306,14 @@ def build(period: str, stock: str, now: datetime | None = None, data_dir: Path =
         except Exception as e:
             errors.append(f"{t['symbol']}: {type(e).__name__}: {e}")
 
+    technical = None
+    try:
+        from .chart import technical as chart_technical
+        tech = chart_technical(focus_t["symbol"], "daily", now, closed_only=True)
+        technical = {"image": tech["image"], "display": tech["display"]}
+    except Exception as e:
+        errors.append(f"technical {focus_t['symbol']}: {type(e).__name__}: {e}")
+
     outlook_tickers = [focus_t] + [t for t in watchlist["tickers"] if t["symbol"] != focus_t["symbol"]]
     dividends, div_err = fetch_dividends(outlook_tickers, now.date(), days_ahead=30)
     earnings, earn_err = upcoming_earnings(outlook_tickers, now.date())
@@ -336,6 +344,7 @@ def build(period: str, stock: str, now: datetime | None = None, data_dir: Path =
             "items": general[: cfg["news_cap"] // 2],
         },
         "outlook": {"dividends": dividends, "earnings": earnings},
+        "technical": technical,
         "errors": errors,
     }
 

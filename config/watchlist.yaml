@@ -1,19 +1,38 @@
+# Watchlist for the daily brief and /analysis peers.
+# Managed by `brief-watch` (Telegram: /watch). Hand edits are fine, but
+# comments other than this header are not preserved.
+# aliases are used to tag news items with the stock.
+
 index:
-  symbol: "^JKSE"
+  symbol: ^JKSE
   name: IHSG
-
 tickers:
-  - symbol: BBCA.JK
-    name: Bank Central Asia
-    aliases: [BBCA, BCA, "Bank Central Asia"]
-  - symbol: BBRI.JK
-    name: Bank Rakyat Indonesia
-    aliases: [BBRI, BRI, "Bank Rakyat Indonesia"]
-  - symbol: TLKM.JK
-    name: Telkom Indonesia
-    aliases: [TLKM, Telkom, "Telkom Indonesia"]
-  - symbol: ASII.JK
-    name: Astra International
-    aliases: [ASII, Astra, "Astra International"]
-
-# aliases are used to tag news items with affected tickers
+- symbol: BBCA.JK
+  name: Bank Central Asia
+  aliases:
+  - BBCA
+  - BCA
+  - Bank Central Asia
+- symbol: BBRI.JK
+  name: Bank Rakyat Indonesia
+  aliases:
+  - BBRI
+  - BRI
+  - Bank Rakyat Indonesia
+- symbol: TLKM.JK
+  name: Telkom Indonesia
+  aliases:
+  - TLKM
+  - Telkom
+  - Telkom Indonesia
+- symbol: ASII.JK
+  name: Astra International
+  aliases:
+  - ASII
+  - Astra
+  - Astra International
+- symbol: EMAS.JK
+  name: Merdeka Gold Resources
+  aliases:
+  - EMAS
+  - Merdeka Gold Resources

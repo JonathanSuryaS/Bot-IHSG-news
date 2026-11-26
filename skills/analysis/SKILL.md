@@ -40,3 +40,16 @@ Repo: `/Users/jonathansurya/Documents/GitHub/Bot IHSG news`.
 
 Don't add anything else. The report, or an error message if something goes
 wrong, arrives as a separate message.
+
+## If the job exits with code 1
+
+A traceback ending in `http.client.RemoteDisconnected: Remote end closed
+connection without response` means the report model's connection dropped.
+`chat()` in `src/brief/report.py` doesn't catch that exception type, so there
+is no automatic retry and nothing reaches Telegram. The drop is transient:
+re-run the exact same command (it can take 2-4 tries), then check
+`ls -lt data | head -3` for a fresh `data/analysis-report.txt` to confirm the
+report was written and sent. If it keeps failing, test the same payload
+directly against `https://router.nibie.app/v1/chat/completions` using the key
+in `~/.hermes/.env` (`HERMES_CUSTOM_ROUTER_NIBIE_APP_*_API_KEY`); if that
+succeeds, the router is flaky rather than the code or the data.
