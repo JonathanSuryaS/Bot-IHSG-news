@@ -1,61 +1,119 @@
-# ihsg-morning-brief
+# 📈 IHSG Bot
 
-A short Telegram brief every weekday at 07:30 WIB, before IDX opens: IHSG,
-the watchlist, the news that matters and upcoming dividends.
-Information only. No buy/sell recommendations.
+**Your Indonesian stock market assistant on Telegram.**
+A morning brief before the bell, a closing report after it, price alerts in between,
+plus on-demand analysis, charts, fundamentals, valuation and dividends for any IDX stock.
+
+> ℹ️ Information and education only. The bot never gives buy/sell recommendations,
+> and every number in an LLM-written brief is checked against the source data before it is sent.
+
+Built on [Hermes Agent](https://github.com/NousResearch/hermes-agent) · Python 3.11+ · managed with [uv](https://docs.astral.sh/uv/)
+
+---
+
+## ✨ Features
+
+### 🌅 Arrives by itself
+
+| | When | What you get |
+|---|---|---|
+| **Morning brief** | Weekdays 07:30 WIB | Yesterday's close, global markets, your watchlist, news that matters, upcoming dividends |
+| **Closing report** | Weekdays 16:45 WIB | Today's result, alerts that fired, news |
+| **Price & volume alerts** | Every 15 min in market hours | Only when something actually moves |
+
+### 💬 Ask for it
+
+| Command | What it does |
+|---|---|
+| `/analysis weekly BBCA` | Weekly or monthly analysis with a chart and technical section |
+| `/chart BBRI` · `/chart IHSG weekly` | Candlestick chart with MA, RSI, MACD, support/resistance |
+| `/fundamental BBRI` | 4 years of financial statements and trends |
+| `/valuasi BBRI` | DCF/DDM model, sensitivity table and an Excel file |
+| `/dividen BBRI 3800` | Dividend history, trend and yield (optionally from your buy price) |
+| `/formula ROE BBRI` | Learn a ratio: meaning, formula, example, and the stock's current value |
+| `/watch add BMRI` | Manage your watchlist |
+| `/alert set TLKM move 2` | Tune alerts: daily move, fast move, volume spikes |
+| `/menu` | Show every command |
+
+Bot replies are in Bahasa Indonesia.
+
+---
+
+## 🧠 How it works
 
 ```
 config/*.yaml ─► brief-fetch (Python, no LLM) ─► data/latest.json
                                                      │
-          Hermes cron (07:30 WIB, Mon–Fri) ─► skill "ihsg-brief" ─► brief-verify ─► Telegram
+        Hermes cron (07:30 WIB, Mon–Fri) ─► skill "ihsg-brief" ─► brief-verify ─► Telegram
 ```
 
-New to Hermes? Start with [docs/how-hermes-works.md](docs/how-hermes-works.md),
-then follow [docs/build-plan.md](docs/build-plan.md).
+- **Python does the numbers.** Fetching, charts, fundamentals, valuation, dividends and alerts are plain Python, with no LLM and no token cost.
+- **The LLM does the writing.** Briefs and analysis reports are written by the model set in `config/llm.yaml`.
+- **`brief-verify` checks the facts.** A draft that contains a number not found in the data is rejected.
+- **Trading-day aware.** IDX holidays live in `config/idx_holidays_*.yaml`, so nothing runs when the market is closed.
 
-## Docs
+---
 
-- [docs/hermes-basics.md](docs/hermes-basics.md): how Hermes Agent works, with a command cheat sheet
-- [docs/plan.md](docs/plan.md): build phases with checklists
-
-## Setup
+## 🚀 Quick start
 
 ```bash
-curl -LsSf https://astral.sh/uv/install.sh | sh   # installs uv
-uv sync                                           # creates .venv with Python 3.11+
-uv run pytest
+curl -LsSf https://astral.sh/uv/install.sh | sh   # install uv
+uv sync                                           # create .venv
+uv run pytest                                     # run the tests
 ```
 
-Link the skill into Hermes (check the skills path after installing Hermes):
+Link the skills into Hermes:
 
 ```bash
-ln -s "$PWD/skills/ihsg-brief" ~/.hermes/skills/ihsg-brief
+for s in skills/*; do ln -s "$PWD/$s" ~/.hermes/skills/$(basename "$s"); done
 ```
 
-## Commands
+New to Hermes? Read [docs/how-hermes-works.md](docs/how-hermes-works.md), then follow [docs/build-plan.md](docs/build-plan.md).
 
-| Command | What it does |
+---
+
+## 🛠 CLI tools
+
+| Command | Purpose |
 |---|---|
-| `uv run brief-check-day` | exit 0 trading day / 1 closed / 2 config error |
-| `uv run brief-fetch` | writes `data/YYYY-MM-DD.json` and `data/latest.json` |
-| `uv run brief-verify draft.txt data/latest.json` | fails if the draft has a number not in the data |
-| `uv run brief-analyze --period week\|month --stock BBCA` | writes `data/analysis-<period>.json` for the `/analysis` skill |
-| `uv run brief-watch list\|add KODE\|remove KODE` | edits `config/watchlist.yaml` (validates codes on Yahoo) |
-| `uv run brief-alerts show\|set\|on\|off\|add\|remove …` | edits `config/alerts.yaml` |
-| `uv run brief-alerts check` | prints alert text or nothing; run every 15 min by cron `ihsg-alerts` |
+| `brief-check-day` | Exit 0 on trading days, 1 when closed, 2 on config error |
+| `brief-fetch` | Fetch data to `data/latest.json` |
+| `brief-verify draft.txt data/latest.json` | Reject drafts with unverified numbers |
+| `brief-analyze --period week --stock BBCA` | Data for `/analysis` |
+| `brief-report` | Write the analysis report with the LLM |
+| `brief-closing` | Build the closing report |
+| `brief-alerts check` | Print alerts, if any (run by cron every 15 min) |
+| `brief-watch` · `brief-alerts` | Edit the watchlist and alert settings |
+| `brief-chart` · `brief-fundamental` · `brief-valuation` · `brief-dividend` · `brief-formula` | Back the matching Telegram commands |
 
-## Skills
+Run any of them with `uv run <command>`.
 
-| Telegram command | Model | When |
-|---|---|---|
-| `/ihsg-brief` | cron job's `--model` (`hy4-flash:free`) | weekdays 07:30 WIB, or on demand |
-| `/analysis <weekly\|monthly> <stock>` | started by the chat model; report written by `config/llm.yaml` → `models.analysis` (`deepseek-v4.1-flash`) via `brief-report`, sent with `hermes send` | on demand only |
-| `/watch list \| add KODE \| remove KODE` | default chat model (`hy4-flash:free`) | on demand |
-| `/alert show \| set KODE move 3 \| set KODE fast 2 \| set KODE volume 2.5 \| on/off KODE \| add/remove KODE` | default chat model (`hy4-flash:free`) | on demand |
-| *(automatic alerts)* | none, cron `ihsg-alerts` runs `--no-agent` | every 15 min, 09:00–16:15 WIB, trading days |
+---
 
-## Before first real run
+## 📁 Project layout
 
-- [ ] Fill `config/idx_holidays_2026.yaml` from the official IDX calendar
-- [ ] Test each feed in `config/feeds.yaml`; set `verified: true` on the ones that work
-- [ ] Implement the stubs in `src/brief/fetcher.py`
+```
+config/    watchlist, alerts, feeds, holidays, LLM models, valuation assumptions, menu text
+prompts/   prompts for analysis and closing reports
+skills/    Hermes skills, one per Telegram command
+src/brief/ the Python package behind every CLI tool
+tests/     pytest suite
+docs/      status, plan and Hermes guides
+```
+
+---
+
+## 📚 Docs
+
+- [docs/STATUS.md](docs/STATUS.md): what works today, troubleshooting
+- [docs/how-hermes-works.md](docs/how-hermes-works.md): Hermes in plain words
+- [docs/hermes-basics.md](docs/hermes-basics.md): command cheat sheet
+- [docs/plan.md](docs/plan.md): build phases and roadmap
+
+## 🗺 Roadmap
+
+- [x] Morning brief, closing report, alerts
+- [x] Analysis, charts, fundamentals, valuation, dividends, formulas
+- [ ] Tune prompts after a week of real briefs
+- [ ] Move to a VPS
+- [ ] RAG over annual reports, web app
